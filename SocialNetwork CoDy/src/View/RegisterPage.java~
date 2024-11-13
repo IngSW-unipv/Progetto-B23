@@ -1,0 +1,118 @@
+package View;
+
+import Controller.CreateUser;
+import Controller.HomePageController;
+import model.User;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+public class RegisterPage {
+    public RegisterPage(){
+        JFrame frame = new JFrame();
+        frame.setResizable(false);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(null);
+        panel.setBorder(BorderFactory.createEmptyBorder(53,84,76,84));
+        panel.add(new JLabel("           Benvenuto", 65, ColorGUIView.white, Font.BOLD), BorderLayout.NORTH);
+
+        JPanel center = new JPanel(new GridLayout(6,1,10,10));
+        center.setBackground(null);
+        center.setBorder(BorderFactory.createEmptyBorder(22,150,17,150));
+
+        JTextField nome = new JTextField("Nome");
+        center.add(nome);
+        JTextField cognome = new JTextField("Cognome");
+        center.add(cognome);
+        JTextField email = new JTextField("Email");
+        center.add(email);
+        JTextField password = new JTextField("Password");
+        center.add(password);
+        JTextField confermaPassword = new JTextField("Conferma Password");
+        center.add(confermaPassword);
+
+        JButton creaAcc = new JButton("Crea Account", 45,20);
+
+        // Dopo aver cliccato il pulsante, vengono effettuati controlli,
+        // viene creato un nuovo user con i dati inseriti e con il metodo create viene aggiunto al database
+        creaAcc.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(nome.getText().isEmpty() || nome.getText().startsWith(" ")){
+                    new AlertView("Il nome non può essere vuoto", frame);
+                    return;
+                }
+                if(cognome.getText().isEmpty() || cognome.getText().startsWith(" ")){
+                    new AlertView("Il cognome non può essere vuoto", frame);
+                    return;
+                }
+                if(email.getText().isEmpty() || email.getText().startsWith(" ")){
+                    new AlertView("L'email non può essere vuota", frame);
+                    return;
+                }
+                if(password.getText().isEmpty() || password.getText().startsWith(" ")){
+                    new AlertView("La password non può essere vuota", frame);
+                    return;
+                }
+                if(!password.getText().equals(confermaPassword.getText())){
+                    new AlertView("Le password non coincidono", frame);
+                    return;
+                }
+                User u = new User();
+                u.setNome(nome.getText());
+                u.setCognome(cognome.getText());
+                u.setEmail(email.getText());
+                u.setPassword(password.getText());
+                CreateUser create = new CreateUser(u);
+
+                if(!create.emailUsata()){
+                    create.create();
+                    u = create.getUser();
+                    new HomePageController(u, new HomePageView(u));
+                    frame.dispose();
+                } else {
+                    new AlertView("Email già usata", frame);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
+
+        center.add(creaAcc);
+        panel.add(center, BorderLayout.CENTER);
+
+        // Listener che fa passare alla schermata di login
+        JLabel login = new JLabel("Hai già un account? Login", 20, ColorGUIView.testoSuggerimento, Font.BOLD);
+        login.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new Login();
+                frame.dispose();
+            }
+            @Override
+            public void mousePressed(MouseEvent e) {}
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        });
+        login.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        login.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(login, BorderLayout.SOUTH);
+
+        frame.getContentPane().add(panel);
+        frame.setVisible(true);
+        frame.requestFocus();
+    }
+}

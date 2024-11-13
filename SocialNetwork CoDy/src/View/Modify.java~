@@ -1,0 +1,108 @@
+//classe per la modifica dei dati inseririti in fase di registrazione
+package View;
+
+import Controller.ChangePasswordController;
+import Controller.HomePageController;
+import database.UserDAO;
+import model.User;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Modify {
+    public Modify(User user){
+        JFrame frame= new JFrame();
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+        frame.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                frame.dispose();
+                new HomePageController(user, new HomePageView(user));
+            }
+
+        });
+
+        JPanel panel= new JPanel(new BorderLayout());
+        panel.setBackground(null);
+        panel.setBorder(BorderFactory.createEmptyBorder(72,84,149,84));
+        panel.add(new JLabel("             Modifica il tuo profilo",40, ColorGUIView.white,Font.BOLD),
+                                BorderLayout.NORTH);
+        JPanel center = new JPanel(new GridLayout(4,1,10,10));
+        center.setBackground(null);
+        center.setBorder(BorderFactory.createEmptyBorder(50,150,17,150));
+
+        JTextField nome= new JTextField("Nome");
+        nome.setText(user.getNome());
+        center.add(nome);
+
+        JTextField cognome= new JTextField("Cognome");
+        cognome.setText((user.getCognome()));
+        center.add(cognome);
+
+        JTextField email= new JTextField("Email");
+        email.setText(user.getEmail());
+        center.add(email);
+
+        JButton submit= new JButton("Conferma",45,20);
+        submit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(nome.isEmpty() || nome.getText().startsWith(" ")){
+                    new AlertView("il nome non puo' essere vuoto",frame);
+                    return;
+                }
+                if(cognome.isEmpty() || cognome.getText().startsWith(" ")){
+                    new AlertView("il cognome non puo' essere vuoto",frame);
+                    return;
+                }
+                if(email.isEmpty() || email.getText().startsWith(" ")){
+                    new AlertView("l'e-mail non puo' essere vuota",frame);
+                    return;
+                }
+
+                user.setNome(nome.getText());
+                user.setCognome(cognome.getText());
+                user.setEmail(email.getText());
+                UserDAO update = new UserDAO(user);
+                if(!email.getText().equals(user.getEmail()) || update.emailUsata()){
+                    new AlertView("L'Email è gia in uso", frame);
+                    return;
+                }
+                if(update.update()){
+                    new HomePageController(user, new HomePageView(user));
+                    new AlertView("Profilo aggiornato con successo", frame);
+                    frame.dispose();
+                } else{
+                    new HomePageController(user, new HomePageView(user));
+                }
+
+            }
+        });
+
+        center.add(submit);
+        panel.add(center,BorderLayout.CENTER);
+
+        JLabel cambiaPsw= new JLabel("Cambia Password",20,
+                Color.lightGray,Font.BOLD);
+        cambiaPsw.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new ChangePasswordController(new ChangePasswordView(),user);
+                frame.dispose();
+            }
+
+        });
+
+        cambiaPsw.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cambiaPsw.setHorizontalAlignment(JLabel.CENTER);
+
+        panel.add(cambiaPsw, BorderLayout.SOUTH);
+
+        frame.getContentPane().add(panel);
+        frame.setVisible(true);
+        frame.requestFocus();
+    }
+}

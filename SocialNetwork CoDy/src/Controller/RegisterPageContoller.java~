@@ -1,0 +1,100 @@
+package Controller;
+
+import View.AlertView;
+import View.HomePageView;
+import View.Login;
+import View.RegisterPageView;
+import model.User;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+public class RegisterPageController {
+    private final RegisterPageView registerPage;
+
+    public RegisterPageController(RegisterPageView registerPage) {
+        this.registerPage = registerPage;
+        initController();
+    }
+
+    private void initController() {
+        registerPage.getCreaAccButton().addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+        registerPage.getLoginLabel().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                handleLogin();
+            }
+        });
+    }
+
+    private void handleRegister() {
+        String nome = registerPage.getNomeField().getText();
+        String cognome = registerPage.getCognomeField().getText();
+        String email = registerPage.getEmailField().getText();
+        String password = registerPage.getPasswordField().getText();
+        String confermaPassword = registerPage.getConfermaPasswordField().getText();
+
+        if (nome.isEmpty() || nome.startsWith(" ")) {
+            new AlertView("Il nome non può essere vuoto", registerPage.getFrame());
+            return;
+        }
+        if (cognome.isEmpty() || cognome.startsWith(" ")) {
+            new AlertView("Il cognome non può essere vuoto", registerPage.getFrame());
+            return;
+        }
+        if (email.isEmpty() || email.startsWith(" ")) {
+            new AlertView("L'email non può essere vuota", registerPage.getFrame());
+            return;
+        }
+        if (password.isEmpty() || password.startsWith(" ")) {
+            new AlertView("La password non può essere vuota", registerPage.getFrame());
+            return;
+        }
+        if (!password.equals(confermaPassword)) {
+            new AlertView("Le password non coincidono", registerPage.getFrame());
+            return;
+        }
+
+        User u = new User(nome, cognome, email, password);
+        CreateUser create = new CreateUser(u);
+
+        if (!create.emailUsata()) {
+            create.create();
+            u = create.getUser();
+            new HomePageController(u, new HomePageView(u));
+            registerPage.getFrame().dispose();
+        } else {
+            new AlertView("Email già usata", registerPage.getFrame());
+        }
+    }
+
+    private void handleLogin() {
+        new Login();
+        registerPage.getFrame().dispose();
+    }
+}

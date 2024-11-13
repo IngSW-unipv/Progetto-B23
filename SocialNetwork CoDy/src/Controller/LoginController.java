@@ -1,0 +1,84 @@
+package Controller;
+
+import View.AlertView;
+import View.HomePageView;
+import View.LoginView;
+import View.RegisterPageView;
+import database.UserDAO;
+import model.Login;
+import model.User;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+/**
+ * La classe LoginController rappresenta il controller per la finestra di login.
+ * Questa classe gestisce le interazioni tra LoginView e LoginModel.
+ *
+ * @author Dylan
+ * @version 1.2
+ */
+public class LoginController {
+    private final LoginView loginView;
+    private final UserDAO userDAO;
+
+    /**
+     * Costruttore che crea un nuovo LoginController
+     * @param loginView La vista di login da gestire
+     */
+    public LoginController(LoginView loginView) {
+        this.loginView = loginView;
+        this.userDAO = new UserDAO(); // Per interagire col database
+
+        loginView.getLoginButton().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                handleLogin();
+            }
+        });
+
+        loginView.getRegisterLabel().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                openRegisterPage();
+            }
+        });
+    }
+
+    /**
+     * Metodo che gestisce il login dell'utente.
+     * Verifica che email e password siano validi e, in caso di successo,
+     * apre la home page. In caso di fallimento, mostra un alert con l'errore.
+     */
+    public void handleLogin() {
+        String email = loginView.getEmailField().getText().trim();
+        String password = loginView.getPasswordField().getText().trim();
+
+        Login loginModel = new Login(email, password);
+
+        if (!loginModel.verificaCredenziali()) {
+            new AlertView("L'email e la password non possono essere vuote", loginView.getFrame());
+            return;
+        }
+
+        User user = userDAO.readUser(loginModel.getEmail(), loginModel.getPassword());
+
+        if (user != null) {
+
+            new HomePageController(user, new HomePageView(user));
+            loginView.getFrame().dispose();
+        } else {
+
+            new AlertView("Email o Password errata", loginView.getFrame());
+        }
+    }
+
+    /**
+     * Metodo che apre la pagina di registrazione e chiude la pagina di login.
+     */
+    public void openRegisterPage() {
+        new RegisterPageController(new RegisterPageView());
+        loginView.getFrame().dispose();
+    }
+}
+
