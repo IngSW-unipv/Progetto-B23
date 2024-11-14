@@ -66,8 +66,8 @@ public class RegisterPageController {
             return;
         }
 
-        if (registerModel.registraUtente(nome, cognome, email, password)) {
-            User nuovoUtente = new User(nome, cognome, email, password);  // Utente creato correttamente
+        User nuovoUtente = registerModel.registraUtente(nome, cognome, email, password);
+        if (nuovoUtente != null) {
             new HomePageController(nuovoUtente, new HomePageView(nuovoUtente));
             registerPage.getFrame().dispose();
         } else {

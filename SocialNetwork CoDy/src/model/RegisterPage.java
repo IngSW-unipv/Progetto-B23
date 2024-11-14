@@ -21,7 +21,7 @@ public class RegisterPage {
      */
 
     public String validaDati(String nome, String cognome, String email, String password, String confermaPassword) {
-        if (nome.isEmpty()) return "Il nome non può essere vuoto";
+        if (nome.isEmpty()) return "Il nome non può essere vuoto!";
         if (cognome.isEmpty()) return "Il cognome non può essere vuoto";
         if (email.isEmpty()) return "L'email non può essere vuota";
         if (password.isEmpty()) return "La password non può essere vuota";
@@ -39,15 +39,15 @@ public class RegisterPage {
      * @param password La password dell'utente.
      * @return true se la registrazione ha avuto successo, false se l'email è già usata.
      */
-    public boolean registraUtente(String nome, String cognome, String email, String password) {
+    public User registraUtente(String nome, String cognome, String email, String password) {
         User nuovoUtente = new User(nome, cognome, email, password);
         UserDAO userDAO = new UserDAO(nuovoUtente);
 
         if (!userDAO.emailUsata()) {
             userDAO.create();
-            return true;
+            return userDAO.getUser();
         } else {
-            return false;
+            return null;
         }
     }
 }

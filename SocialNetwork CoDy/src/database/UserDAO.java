@@ -34,6 +34,10 @@ public class UserDAO {
     }
     public UserDAO(){}
 
+    public UserDAO(Connection connection) {
+        this.connection = connection;
+    }
+
     /**
      * Metodo che crea un utente nel database.
      *
@@ -251,7 +255,7 @@ public class UserDAO {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     user = new User();
-                    user.setID(ID);
+                    user.setID(rs.getInt("ID"));
                     user.setNome(rs.getString("Nome"));
                     user.setCognome(rs.getString("Cognome"));
                     user.setEmail(rs.getString("Email"));

@@ -34,11 +34,20 @@ public class UserDAO {
     }
     public UserDAO(){}
 
-    // Metodo che inserisce nel db i dati inseriti in fase di registrazione
+    public UserDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    /**
+     * Metodo che crea un utente nel database.
+     *
+     * Il metodo crea un utente con i dati dell'oggetto UserDAO
+     * e li inserisce nel database.
+     */
     public void create() {
         String insert = "INSERT INTO users (Nome, Cognome, Email, Password) VALUES (?,?,?,?)";
         try {
-            connection=DbConnectionSingleton.getInstance().getConnection();
+            //connection=DbConnectionSingleton.getInstance().getConnection();
             PreparedStatement pstmt = connection.prepareStatement(insert);
             pstmt.setString(1, u.getNome());
             pstmt.setString(2, u.getCognome());
@@ -51,13 +60,17 @@ public class UserDAO {
         DbConnectionSingleton.getInstance().closeConnection();
     }
 
-    // Metodo che restituisce vero se nel database viene trovata la stessa mail
+    /**
+     * Metodo che verifica se l'email dell'utente
+     * associato e' gia' presente nel database.
+     * @return true se l'email e' gia' presente nel database, false altrimenti
+     */
     public boolean emailUsata() {
         boolean used = false;
         String select = "SELECT * FROM users WHERE Email = ?";
 
         try {
-            connection=DbConnectionSingleton.getInstance().getConnection();
+            //connection=DbConnectionSingleton.getInstance().getConnection();
             PreparedStatement pstmt = connection.prepareStatement(select);
             pstmt.setString(1, u.getEmail());
             ResultSet rs = pstmt.executeQuery();
@@ -72,13 +85,19 @@ public class UserDAO {
     }
 
 
-    // Metodo che restituisce l'utente corrispondente alla mail e alla psw nel db
+    /**
+     * Metodo che legge un utente dal database.
+     *
+     * Il metodo legge l'utente con l'email e la password
+     * dell'oggetto UserDAO e lo restituisce.
+     * @return l'utente se l'email e la password sono corrette, null altrimenti
+     */
     public User getUser() {
         u.setAmici(new ArrayList<>());
         String select = "SELECT ID FROM users WHERE Email = ? AND Password = ?";
 
         try {
-            connection=DbConnectionSingleton.getInstance().getConnection();
+            //connection=DbConnectionSingleton.getInstance().getConnection();
             PreparedStatement pstmt = connection.prepareStatement(select);
             pstmt.setString(1, u.getEmail());
             pstmt.setString(2, u.getPassword());
@@ -92,14 +111,21 @@ public class UserDAO {
         DbConnectionSingleton.getInstance().closeConnection();
         return u;
     }
-//metodo che aggiorna nel db i dati dell'utente e da vero se l'operazione è andata a buon fine
+
+    /**
+     * Aggiorna l'utente nel database.
+     *
+     * Il metodo aggiorna i campi dell'utente nel database.
+     *
+     * @return true se l'aggiornamento va a buon fine, false altrimenti
+     */
     public boolean update() {
         PreparedStatement pstmt = null;
         boolean updated;
         String update = "UPDATE users SET Nome = ?, Cognome = ?, Email = ? WHERE ID = ?";
 
         try  {
-            connection = DbConnectionSingleton.getInstance().getConnection();
+            //connection = DbConnectionSingleton.getInstance().getConnection();
             pstmt = connection.prepareStatement(update);
             pstmt.setString(1, u.getNome());
             pstmt.setString(2, u.getCognome());
@@ -116,13 +142,19 @@ public class UserDAO {
         return updated;
     }
 
+/**
+ * Cambia la password dell'utente nel database.
+ *
+ * @param newPassword la nuova password da impostare per l'utente
+ * @return true se la modifica della password va a buon fine, false altrimenti
+ */
     public boolean changePassword(String newPassword){
         PreparedStatement pstmt;
         boolean changed;
         String update = "UPDATE users SET Password = ? WHERE ID = ?";
 
         try {
-            connection=DbConnectionSingleton.getInstance().getConnection();
+            //connection=DbConnectionSingleton.getInstance().getConnection();
             pstmt = connection.prepareStatement(update);
             pstmt.setString(1, newPassword);
             pstmt.setInt(2, u.getID());
@@ -137,6 +169,16 @@ public class UserDAO {
         return changed;
     }
 
+    /**
+     * Metodo che legge un utente dal database.
+     *
+     * Il metodo restituisce un oggetto User se l'email e la password
+     * passate come parametri sono corrette, altrimenti restituisce null.
+     *
+     * @param email l'email dell'utente da cercare
+     * @param password la password dell'utente da cercare
+     * @return un oggetto User se l'utente esiste, null altrimenti
+     */
     public User readUser(String email, String password){
         PreparedStatement ps;
         PreparedStatement pstmt;
@@ -144,7 +186,7 @@ public class UserDAO {
         String select= "SELECT * FROM users WHERE Email = ? AND Password = ?;";
         User user=null;
         try{
-            connection = DbConnectionSingleton.getInstance().getConnection();
+            //connection = DbConnectionSingleton.getInstance().getConnection();
             ps = connection.prepareStatement(select);
             ps.setString(1, email);
             ps.setString(2, password);
@@ -197,18 +239,23 @@ public class UserDAO {
         return user;
     }
 
+    /**
+     * Questo metodo legge i dati di un utente a partire dal suo ID.
+     * @param ID l'ID dell'utente da cercare
+     * @return un oggetto User se l'utente esiste, null altrimenti
+     */
     public User readUserByID(int ID) {
         PreparedStatement pstmt = null;
         String select = "SELECT * FROM users WHERE ID = ?";
         User user = null;
         try {
-            connection = DbConnectionSingleton.getInstance().getConnection();
+            //connection = DbConnectionSingleton.getInstance().getConnection();
             pstmt = connection.prepareStatement(select);
             pstmt.setInt(1, ID);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     user = new User();
-                    user.setID(ID);
+                    user.setID(rs.getInt("ID"));
                     user.setNome(rs.getString("Nome"));
                     user.setCognome(rs.getString("Cognome"));
                     user.setEmail(rs.getString("Email"));
@@ -223,14 +270,24 @@ public class UserDAO {
         return user;
     }
 
-    //metodo che legge tutti gli utenti presenti nel database
+
+    /**
+     * Metodo che legge tutti gli utenti dal database.
+     *
+     * Il metodo restituisce una lista di oggetti User contenente tutti gli utenti
+     * presenti nel database. L'utente che effettua la richiesta non viene incluso
+     * nella lista.
+     *
+     * @param user l'utente che effettua la richiesta
+     * @return una lista di oggetti User contenente tutti gli utenti presenti nel database
+     */
     public ArrayList<User> readAllUsers(User user){
         PreparedStatement pstmt;
 
         String select = "SELECT * FROM users;";
         ArrayList<User> users = new ArrayList<>();
         try{
-            connection = DbConnectionSingleton.getInstance().getConnection();
+            //connection = DbConnectionSingleton.getInstance().getConnection();
             pstmt = connection.prepareStatement(select);
             ResultSet rs =pstmt.executeQuery(select);
             while (rs.next()){
