@@ -38,11 +38,11 @@ public class CommentsTabController {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (view.getCommentIn().isEmpty()) {
-                    new AlertView("Non puoi pubblicare un commento vuoto", view.getFrame());
+                    new AlertView("Il commento è vuoto", view.getFrame());
                     return;
                 }
                 if (view.getCommentIn().getText().startsWith(" ")) {
-                    new AlertView("il commento non puo' iniziare con uno spazio", view.getFrame());
+                    new AlertView("il commento inizia con uno spazio", view.getFrame());
                     view.getCommentIn().setText("");
                     return;
                 }
