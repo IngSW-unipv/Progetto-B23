@@ -19,7 +19,7 @@ class ReadUserTest {
     public void setUp() throws SQLException {
         connection = DbConnectionSingleton.getInstance().getConnection();
 
-        // Creazione di un utente di test nel database
+
         String createUser = "INSERT INTO users (ID, Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(createUser)) {
             ps.setInt(1, 11111);
@@ -34,8 +34,7 @@ class ReadUserTest {
 
     @AfterEach
     public void tearDown() throws SQLException {
-        connection = DbConnectionSingleton.getInstance().getConnection();
-        // Rimozione dell'utente di test dal database
+        connection = DbConnectionSingleton.getInstance().getConnection();        
         String deleteUser = "DELETE FROM users WHERE Email = ?";
         try (PreparedStatement ps = connection.prepareStatement(deleteUser)) {
             ps.setString(1, "test@email.com");
