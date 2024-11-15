@@ -73,7 +73,7 @@ public class HomePageView {
         JPanel south = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         south.setBackground(null);
 
-        postBtn = new JButton("Post", 35, 16);
+        postBtn = new JButton("Invia", 35, 16);
         postBtn.setPreferredSize(new Dimension(81, 37));
         south.add(postBtn);
 
