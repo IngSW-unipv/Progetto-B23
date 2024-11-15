@@ -35,7 +35,7 @@ public class CommentsTabView {
         panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
         panel.setBackground(null);
 
-        panel.add(new PostTab(user, post, frame, false));
+        panel.add(new PostG(user, post, frame, false));
 
 
         panel.add(Box.createVerticalStrut(7));

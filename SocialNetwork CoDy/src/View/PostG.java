@@ -19,7 +19,7 @@ import java.awt.event.MouseEvent;
  * @author Dylan
  * @version 1.0
  */
-public class PostTab extends JPanel {
+public class PostG extends JPanel {
     private JLabel likesCounter;
     private model.Post post;
 
@@ -31,7 +31,7 @@ public class PostTab extends JPanel {
  * @param f        il JFrame associato alla vista del post
  * @param redirect booleano che indica se il post deve gestire un reindirizzamento
  */
-    public PostTab(User u, model.Post post, JFrame f, boolean redirect){
+    public PostG(User u, model.Post post, JFrame f, boolean redirect){
         this.post=post;
 
 

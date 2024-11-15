@@ -62,7 +62,7 @@ public class ChangePasswordController {
                 }
 
                 if (nuovaPassword.length() < 6) {
-                    new AlertView("la password deve contenere almeno 6 caratteri", frame);
+                    new AlertView("almeno 6 caratteri per la password", frame);
                     return;
                 }
 

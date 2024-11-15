@@ -1,7 +1,7 @@
 package Controller;
 
 import View.HomePageView;
-import View.PostTab;
+import View.PostG;
 import View.RegisterPageView;
 import View.TabView;
 import database.LikeDAO;
@@ -58,25 +58,25 @@ public class TabController {
         });
 
         switch (view){
-            case "Amici":
+            case "Utenti":
                 ArrayList<User> users= new UserDAO().readAllUsers(user);
                 for(User u : users){
                     tabView.getPanel().add(Box.createVerticalStrut(7));
                     tabView.getPanel().add(new FriendsController(user, u).getFriendsView());
                 }
                 break;
-            case "Posts":
+            case "I Miei Post":
                 ArrayList<Post> posts = new PostDAO().readUserPosts(user);
                 for(Post p : posts){
                     tabView.getPanel().add(Box.createVerticalStrut(7));
-                    tabView.getPanel().add(new PostTab(user, p, tabView.getFrame(), true));
+                    tabView.getPanel().add(new PostG(user, p, tabView.getFrame(), true));
                 }
                 break;
-            case "Like":
+            case "I Miei Like":
                 ArrayList<Post> likes = new LikeDAO().ReadUserLikes(user);
                 for(Post p : likes){
                     tabView.getPanel().add(Box.createVerticalStrut(7));
-                    tabView.getPanel().add(new PostTab(user,p,tabView.getFrame(),true));
+                    tabView.getPanel().add(new PostG(user,p,tabView.getFrame(),true));
                 }
                 break;
 

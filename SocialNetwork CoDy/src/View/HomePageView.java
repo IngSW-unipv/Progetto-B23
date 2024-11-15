@@ -43,9 +43,9 @@ public class HomePageView {
 
         sidebar.add(filler);
         sidebar.add(profilo);
-        sidebar.add(new SideButton("Posts", "post", user, frame));
-        sidebar.add(new SideButton("Amici", "people", user, frame));
-        sidebar.add(new SideButton("Like","Ilike",user,frame));
+        sidebar.add(new SideButton("I Miei Post", "post", user, frame));
+        sidebar.add(new SideButton("Utenti", "people", user, frame));
+        sidebar.add(new SideButton("I Miei Like","Ilike",user,frame));
         sidebar.add(new SideButtonLogout("Logout", "Logout", user, frame));
         frame.getContentPane().add(sidebar, BorderLayout.WEST);
 
@@ -94,7 +94,7 @@ public class HomePageView {
      */
     public void addPostToTimeline(User user, model.Post post) {
         postPanel.add(Box.createVerticalStrut(7));
-        postPanel.add(new PostTab(user, post, frame, true));
+        postPanel.add(new PostG(user, post, frame, true));
     }
 
     /**
