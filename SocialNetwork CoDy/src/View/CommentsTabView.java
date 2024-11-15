@@ -52,7 +52,7 @@ public class CommentsTabView {
         commentIn = new JTextArea("Scrivi un commento", 18,5);
         nuovoCommento.add(new JScrollPane(commentIn), BorderLayout.CENTER);
 
-        commentBtn = new JButton("Post", 35,16);
+        commentBtn = new JButton("Invia", 35,16);
         commentBtn.setPreferredSize(new Dimension(81,37));
 
 
