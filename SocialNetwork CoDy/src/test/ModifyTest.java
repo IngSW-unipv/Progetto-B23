@@ -40,7 +40,6 @@ public class ModifyTest {
     @AfterEach
     public void tearDown() throws SQLException {
         connection = DbConnectionSingleton.getInstance().getConnection();
-        // Rimozione dell'utente di test dal database
         String deleteUser = "DELETE FROM users WHERE ID = ?";
         try (PreparedStatement ps = connection.prepareStatement(deleteUser)) {
             ps.setInt(1, 111111);
