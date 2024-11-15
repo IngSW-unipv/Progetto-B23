@@ -22,7 +22,6 @@ public class ModifyTest {
     @BeforeEach
     public void setUp() throws SQLException {
         connection = DbConnectionSingleton.getInstance().getConnection();
-
         String createUser = "INSERT INTO users (ID, Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(createUser)) {
             ps.setInt(1, 111111);
