@@ -90,7 +90,7 @@ public class PostTab extends JPanel {
             like.setIcon(new ImageIcon("immagini/like.png"));
         }
 
-        //
+        
         like.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -123,14 +123,13 @@ public class PostTab extends JPanel {
         if(redirect) {
             JLabel comments = new JLabel("", 15, Color.lightGray, Font.BOLD);
             comments.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            // per cambiare il testo quando i commenti diventano più di uno
+            
             if (commentsCount < 2 && commentsCount != 0) {
                 comments.setText(commentsCount + " Commento");
             } else {
                 comments.setText(commentsCount + " Commenti");
             }
 
-            //listener sul tasto dei commenti per accedere alla sezione commenti
 
             comments.addMouseListener(new MouseAdapter() {
                 @Override
