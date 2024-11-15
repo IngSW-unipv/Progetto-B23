@@ -54,7 +54,7 @@ public class DbConnectionSingleton {
         try {
             String url = "jdbc:mysql://localhost:3306/social";
             String user = "root";
-            String password = "D520881R";
+            String password = "123456";
             this.connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
             new AlertView(e.getMessage(), null);

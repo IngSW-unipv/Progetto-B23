@@ -11,13 +11,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Classe di test per la modifica di un utente nel database.
+ *
+ * @author Dylan
+ * @version 1.0
+ */
 public class ModifyTest {
     private Connection connection;
     @BeforeEach
     public void setUp() throws SQLException {
         connection = DbConnectionSingleton.getInstance().getConnection();
 
-        // Creazione di un utente di test nel database
         String createUser = "INSERT INTO users (ID, Nome, Cognome, Email, Password) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(createUser)) {
             ps.setInt(1, 111111);

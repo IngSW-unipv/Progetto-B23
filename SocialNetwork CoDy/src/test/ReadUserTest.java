@@ -13,6 +13,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Classe di test per la classe UserDAO.
+ *
+ * @author CoDy
+ * @version 1.0
+ */
 class ReadUserTest {
     private Connection connection;
     @BeforeEach
